@@ -1,0 +1,59 @@
+#!/bin/sh
+
+UNITY_EXECUTABLE="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
+PROJECT_FOLDER="$1"
+RESULTS_FILENAME="$2"
+RESULTS_FILEPATH="$PROJECT_FOLDER/$RESULTS_FILENAME"
+
+
+## Run Unity Editor tests
+
+echo "travis_fold:start:editor_tests"
+echo "Testing Unity project: $PROJECT_FOLDER"
+echo "Running Unity.app..."
+
+"$UNITY_EXECUTABLE" \
+-projectPath "$PROJECT_FOLDER" \
+-batchmode \
+-runEditorTests \
+-editorTestsResultFile "$RESULTS_FILEPATH" \
+-nographics
+
+STATUS_CODE=$?
+
+echo "Editor log: ~/Library/Logs/Unity/Editor.log"
+echo "Results xml: $RESULTS_FILEPATH"
+
+echo "travis_fold:end:editor_tests"
+
+
+## Quick summary
+
+if [ $STATUS_CODE -eq 0 ];then
+echo "✅ Editor tests passed."
+echo "Unity exited with status code $STATUS_CODE (see details below)."
+else
+echo "❌ Editor tests failed."
+echo "Unity exited with status code $STATUS_CODE (see details below)."
+fi
+
+
+## Output Unity Editor test results
+
+echo "travis_fold:start:editor_test_results"
+echo "$RESULTS_FILENAME.json"
+
+python \
+.scripts/xml-to-json.py \
+-t xml2json \
+"$RESULTS_FILENAME" \
+--pretty \
+--strip_text \
+| sed -e $'s/"@/"/g'
+
+echo "travis_fold:end:editor_test_results"
+
+
+## Exit with Unity.app status code
+
+exit "$STATUS_CODE"
