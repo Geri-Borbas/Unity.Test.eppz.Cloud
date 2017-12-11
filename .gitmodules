@@ -1,0 +1,4 @@
+[submodule "Assets/Plugins/eppz!/Cloud"]
+	path = Assets/Plugins/eppz!/Cloud
+	url = https://github.com/eppz/Unity.Library.eppz.Cloud.git
+	branch = master
