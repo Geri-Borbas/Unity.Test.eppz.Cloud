@@ -6,5 +6,5 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Cloud.unity
+    path: Assets/Plugins/eppz!/Cloud/Scenes/Cloud.unity
     guid: dd7c7495c17ee4874b4cb21892128f11
